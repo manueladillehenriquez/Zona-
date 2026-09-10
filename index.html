@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ================= CABECERAS DE SEGURIDAD (parcial) =================
+     GitHub Pages no permite configurar cabeceras HTTP reales, así que
+     esto es lo máximo que se puede hacer vía <meta>. Cabeceras como
+     X-Frame-Options y Strict-Transport-Security NO pueden fijarse por
+     meta tag y requieren un hosting con headers configurables
+     (Netlify, Vercel, Cloudflare Pages) si en el futuro se necesitan.
+     "frame-ancestors 'none'" abajo cumple una función similar a
+     X-Frame-Options (evita que el sitio se incruste en un iframe ajeno)
+     y sí es soportado como meta tag por navegadores modernos.
+     Se permite 'unsafe-inline' en script/style porque el sitio usa
+     un puñado de atributos onclick= y style= inline; para una política
+     más estricta habría que eliminarlos primero (mejora futura). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; frame-ancestors 'none'; base-uri 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>ZONA Todo para su premiación</title>
 <meta name="description" content="30 años creando premios en Acrílico, Madera, Cristales y diferentes tipos de Metales. Copas, medallas, trofeos, insignias, piochas y grabados láser para empresas, colegios y municipalidades en todo Chile.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -410,6 +424,7 @@
     <h1 class="page-title">Contacto</h1>
     <div class="contacto-grid">
       <form class="form-card" id="formContacto" novalidate>
+        <input type="text" name="_honey" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="form-group">
           <label for="contactoNombre">Nombre *</label>
           <input type="text" id="contactoNombre" name="nombre" required>
@@ -441,7 +456,7 @@
       <div class="contacto-info">
         <h3>Datos de Contacto</h3>
         <p><strong>Teléfono / WhatsApp:</strong> <a id="contactoWhatsapp" href="#" target="_blank" rel="noopener">+56 2 2671 6459</a></p>
-        <p><strong>Email:</strong> <a href="mailto:mariaceciliaha@yahoo.es">mariaceciliaha@yahoo.es</a></p>
+        <p><strong>Email:</strong> <a href="mailto:zonatrofeos@hotmail.cl">zonatrofeos@hotmail.cl</a></p>
         <p><strong>Ubicación:</strong> San Diego 119, local 121</p>
         <a class="mapa-embed" id="contactoMapaLink" href="https://www.google.com/maps/search/?api=1&query=San+Diego+119+Santiago" target="_blank" rel="noopener">
           <span class="mapa-pin" aria-hidden="true">📍</span>
@@ -458,6 +473,7 @@
     <h1 class="page-title">Solicitar Cotización</h1>
     <p class="page-intro">Completa el formulario y nos contactaremos contigo en menos de 24 horas.</p>
     <form class="form-card" id="formCotizacion" novalidate>
+      <input type="text" id="cotHoney" name="_honey" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-group">
         <label for="cotEmpresa">Nombre Empresa / Persona *</label>
         <input type="text" id="cotEmpresa" name="empresa" required>
@@ -533,7 +549,8 @@
         <p class="auth-links">
           <a href="#" id="linkOlvide">¿Olvidaste tu contraseña?</a>
         </p>
-        <p class="auth-hint">Demo admin: admin@zona.cl / admin123 · Demo cliente: demo@empresa.cl / demo123</p>
+        <!-- Credenciales demo removidas de la vista de producción por seguridad.
+             Ver comentario junto a la función login() en script.js para más detalle. -->
       </form>
     </div>
   </div>

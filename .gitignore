@@ -1,0 +1,22 @@
+# Archivos de entorno / configuración local (nunca deben subirse)
+.env
+.env.local
+.env.*.local
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Dependencias (si en el futuro se agrega tooling con npm)
+node_modules/
+
+# Archivos temporales o de respaldo
+*.log
+*.tmp
+*.bak

@@ -6,9 +6,11 @@
 /* ================= CONFIGURACIÓN ================= */
 const CONFIG = {
   whatsappNumero: "56226716459",
-  adminEmail: "mariaceciliaha@yahoo.es",
-  // Reemplazar por el ID real obtenido en https://formspree.io
-  formspreeId: "TU_FORM_ID_AQUI"
+  adminEmail: "zonatrofeos@hotmail.cl",
+  // Correo al que llegan los formularios vía FormSubmit.co (sin necesidad de cuenta).
+  // La primera vez que llegue un mensaje real, FormSubmit enviará un correo de
+  // confirmación a esta casilla (revisar bandeja de entrada y spam) para activarlo.
+  formsubmitEmail: "zonatrofeos@hotmail.cl"
 };
 
 /* ================= DATOS INICIALES ================= */
@@ -241,6 +243,26 @@ function esAdmin() {
   const u = getUsuarioActual();
   return !!(u && u.rol === "admin");
 }
+/* ================================================================
+   NOTA DE SEGURIDAD IMPORTANTE — LEER ANTES DE CONFIAR EN ESTE LOGIN
+   ================================================================
+   Esta función y todo el sistema de "usuarios" viven 100% en el
+   navegador del visitante (localStorage/sessionStorage). NO hay
+   servidor ni base de datos real detrás.
+   Esto implica que:
+   - Las contraseñas están en texto plano, visibles en el código fuente
+     y en localStorage vía las herramientas de desarrollador.
+   - Cualquier persona puede editar localStorage o el propio JS para
+     iniciar sesión como admin sin conocer la contraseña.
+   - No existe límite real de intentos de inicio de sesión, ni hash de
+     contraseñas, ni autenticación de servidor: cualquier intento de
+     agregar eso aquí sería solo cosmético, no una barrera real.
+   Este login sirve para DEMOSTRAR el flujo de la aplicación (cliente
+   vs. admin), no para proteger datos sensibles reales. Si en el futuro
+   se maneja información sensible de clientes o pagos, esto debe
+   reemplazarse por autenticación real de servidor (ej. Firebase Auth,
+   ver Fase 2 del proyecto).
+   ================================================================ */
 function login(email, password) {
   const usuarios = getUsuarios();
   const usuario = usuarios.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
@@ -313,6 +335,19 @@ function actualizarCotizacion(id, cambios) {
 
 /* ================= VALIDACIÓN ================= */
 function validarEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+/* Escapa HTML antes de insertar datos de usuario en el DOM (previene XSS).
+   Usar siempre con datos que vengan de formularios (empresa, email, mensaje,
+   especificaciones, etc.) antes de interpolarlos en innerHTML. */
+function esc(valor) {
+  if (valor === null || valor === undefined) return "";
+  return String(valor)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 function validarTelefono(tel) { return /^(\+?56)?\s?9\s?\d{4}\s?\d{4}$/.test(tel.replace(/[-()]/g, "")); }
 
 function mostrarErrorCampo(input, mensaje) {
@@ -326,21 +361,23 @@ function limpiarErrorCampo(input) {
   if (err) err.textContent = "";
 }
 
-/* ================= INTEGRACIONES: FORMSPREE + WHATSAPP ================= */
-async function enviarFormspree(datos, asunto) {
-  if (!CONFIG.formspreeId || CONFIG.formspreeId === "TU_FORM_ID_AQUI") {
-    console.warn("Formspree no configurado. Configura CONFIG.formspreeId en script.js. Datos que se habrían enviado:", asunto, datos);
+/* ================= INTEGRACIONES: FORMSUBMIT + WHATSAPP ================= */
+async function enviarFormulario(datos, asunto) {
+  // Honeypot anti-bots: si el campo oculto "_honey" viene con contenido,
+  // es casi seguro un bot rellenando el formulario automáticamente.
+  if (datos._honey) {
+    console.warn("Envío bloqueado por honeypot (probable bot).");
     return false;
   }
   try {
-    const response = await fetch(`https://formspree.io/f/${CONFIG.formspreeId}`, {
+    const response = await fetch(`https://formsubmit.co/ajax/${CONFIG.formsubmitEmail}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(Object.assign({ _subject: asunto }, datos))
+      body: JSON.stringify(Object.assign({ _subject: asunto, _captcha: "false" }, datos))
     });
     return response.ok;
   } catch (e) {
-    console.error("Error enviando a Formspree", e);
+    console.error("Error enviando formulario a FormSubmit", e);
     return false;
   }
 }
@@ -610,8 +647,8 @@ function initFormContacto() {
     if (!mensaje.value.trim()) { mostrarErrorCampo(mensaje, "El mensaje es obligatorio."); valido = false; }
     if (!valido) return;
 
-    const datos = { nombre: nombre.value, email: email.value, telefono: form.telefono.value, asunto: asunto.value, mensaje: mensaje.value };
-    await enviarFormspree(datos, `Nuevo mensaje de contacto de ${datos.nombre}`);
+    const datos = { nombre: nombre.value, email: email.value, telefono: form.telefono.value, asunto: asunto.value, mensaje: mensaje.value, _honey: form._honey ? form._honey.value : "" };
+    await enviarFormulario(datos, `Nuevo mensaje de contacto de ${datos.nombre}`);
     abrirWhatsApp(`Nuevo mensaje de contacto:\nNombre: ${datos.nombre}\nEmail: ${datos.email}\nAsunto: ${datos.asunto}`);
     form.reset();
     alert("Mensaje enviado. Nos contactaremos contigo pronto.");
@@ -670,6 +707,9 @@ function initFormCotizacion() {
     if (!campos.terminos.checked) { mostrarErrorCampo(campos.terminos, "Debes aceptar los términos y condiciones."); valido = false; }
     if (!valido) return;
 
+    const honeyEl = document.getElementById("cotHoney");
+    if (honeyEl && honeyEl.value) { console.warn("Envío bloqueado por honeypot (probable bot)."); return; }
+
     const datos = {
       empresa: campos.empresa.value,
       email: campos.email.value,
@@ -681,7 +721,7 @@ function initFormCotizacion() {
     };
     const nueva = guardarCotizacion(datos);
 
-    await enviarFormspree(nueva, `Nueva cotización de ${nueva.empresa}`);
+    await enviarFormulario(nueva, `Nueva cotización de ${nueva.empresa}`);
     abrirWhatsApp(`Nueva cotización de ${nueva.empresa} - Producto: ${nueva.producto} - Cantidad: ${nueva.cantidad}`);
 
     form.reset();
@@ -751,8 +791,8 @@ function renderDashboardCliente() {
   document.getElementById("tablaPendientesCliente").innerHTML = pendientes.map(c => `
     <tr>
       <td>${fmtFecha(c.fecha_solicitud)}</td>
-      <td>${c.producto}</td>
-      <td>${c.cantidad}</td>
+      <td>${esc(c.producto)}</td>
+      <td>${esc(c.cantidad)}</td>
       <td>${estadoTagHTML(c.estado)}</td>
       <td><button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver Detalles</button></td>
     </tr>
@@ -767,8 +807,8 @@ function renderDashboardCliente() {
     document.getElementById("tablaHistorialCliente").innerHTML = lista.map(c => `
       <tr>
         <td>${fmtFecha(c.fecha_solicitud)}</td>
-        <td>${c.producto}</td>
-        <td>${c.cantidad}</td>
+        <td>${esc(c.producto)}</td>
+        <td>${esc(c.cantidad)}</td>
         <td>${estadoTagHTML(c.estado)}</td>
         <td><button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver Detalles</button></td>
       </tr>
@@ -799,19 +839,19 @@ function abrirDetalleCotizacion(id) {
   const body = document.getElementById("detalleCotizacionBody");
   body.innerHTML = `
     <dl>
-      <dt>Empresa</dt><dd>${c.empresa}</dd>
-      <dt>Email</dt><dd>${c.email}</dd>
-      <dt>Teléfono</dt><dd>${c.telefono}</dd>
-      <dt>Producto</dt><dd>${c.producto}</dd>
-      <dt>Cantidad</dt><dd>${c.cantidad}</dd>
-      <dt>Especificaciones</dt><dd>${c.especificaciones || "-"}</dd>
-      <dt>Fecha Requerida</dt><dd>${c.fecha_requerida}</dd>
+      <dt>Empresa</dt><dd>${esc(c.empresa)}</dd>
+      <dt>Email</dt><dd>${esc(c.email)}</dd>
+      <dt>Teléfono</dt><dd>${esc(c.telefono)}</dd>
+      <dt>Producto</dt><dd>${esc(c.producto)}</dd>
+      <dt>Cantidad</dt><dd>${esc(c.cantidad)}</dd>
+      <dt>Especificaciones</dt><dd>${esc(c.especificaciones) || "-"}</dd>
+      <dt>Fecha Requerida</dt><dd>${esc(c.fecha_requerida)}</dd>
       <dt>Fecha Solicitud</dt><dd>${fmtFecha(c.fecha_solicitud)}</dd>
       <dt>Estado</dt><dd>${estadoTagHTML(c.estado)}</dd>
       ${c.presupuesto !== null && c.presupuesto !== undefined ? `<dt>Presupuesto</dt><dd>$${Number(c.presupuesto).toLocaleString("es-CL")} CLP</dd>` : ""}
-      ${c.presupuesto_descripcion ? `<dt>Detalle Presupuesto</dt><dd>${c.presupuesto_descripcion}</dd>` : ""}
-      ${c.pago ? `<dt>Pago</dt><dd>${c.pago}</dd>` : ""}
-      ${c.mensaje_rechazo ? `<dt>Motivo Rechazo</dt><dd>${c.mensaje_rechazo}</dd>` : ""}
+      ${c.presupuesto_descripcion ? `<dt>Detalle Presupuesto</dt><dd>${esc(c.presupuesto_descripcion)}</dd>` : ""}
+      ${c.pago ? `<dt>Pago</dt><dd>${esc(c.pago)}</dd>` : ""}
+      ${c.mensaje_rechazo ? `<dt>Motivo Rechazo</dt><dd>${esc(c.mensaje_rechazo)}</dd>` : ""}
     </dl>
   `;
   abrirModal("modalDetalleCotizacion");
@@ -841,7 +881,7 @@ function initFormNuevaCotizacionDash() {
       especificaciones: especificaciones.value,
       fecha_requerida: fecha.value
     });
-    await enviarFormspree(nueva, `Nueva cotización de ${nueva.empresa}`);
+    await enviarFormulario(nueva, `Nueva cotización de ${nueva.empresa}`);
     abrirWhatsApp(`Nueva cotización de ${nueva.empresa} - Producto: ${nueva.producto} - Cantidad: ${nueva.cantidad}`);
     cerrarModales();
     renderDashboardCliente();
@@ -884,8 +924,8 @@ function renderDashboardAdmin() {
 
   document.getElementById("tablaAdminPendientes").innerHTML = pendientes.map(c => `
     <tr>
-      <td>${c.empresa}</td><td>${c.email}</td><td>${c.telefono}</td><td>${c.producto}</td><td>${c.cantidad}</td>
-      <td>${fmtFecha(c.fecha_solicitud)}</td><td>${(c.especificaciones || "-").slice(0, 40)}</td>
+      <td>${esc(c.empresa)}</td><td>${esc(c.email)}</td><td>${esc(c.telefono)}</td><td>${esc(c.producto)}</td><td>${esc(c.cantidad)}</td>
+      <td>${fmtFecha(c.fecha_solicitud)}</td><td>${esc((c.especificaciones || "-").slice(0, 40))}</td>
       <td class="acciones-cell">
         <button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver</button>
         <button class="btn btn-primary btn-sm" data-presupuestar="${c.id}">Enviar Presupuesto</button>
@@ -896,7 +936,7 @@ function renderDashboardAdmin() {
 
   document.getElementById("tablaAdminEnviadas").innerHTML = enviadas.map(c => `
     <tr>
-      <td>${c.empresa}</td><td>${c.producto}</td><td>$${Number(c.presupuesto || 0).toLocaleString("es-CL")}</td>
+      <td>${esc(c.empresa)}</td><td>${esc(c.producto)}</td><td>$${Number(c.presupuesto || 0).toLocaleString("es-CL")}</td>
       <td>${fmtFecha(c.fecha_solicitud)}</td>
       <td class="acciones-cell">
         <button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver</button>
@@ -907,8 +947,8 @@ function renderDashboardAdmin() {
 
   document.getElementById("tablaAdminAprobadas").innerHTML = aprobadas.map(c => `
     <tr>
-      <td>${c.empresa}</td><td>${c.producto}</td><td>$${Number(c.presupuesto || 0).toLocaleString("es-CL")}</td>
-      <td>${c.pago || "Pendiente"}</td><td>${fmtFecha(c.fecha_solicitud)}</td>
+      <td>${esc(c.empresa)}</td><td>${esc(c.producto)}</td><td>$${Number(c.presupuesto || 0).toLocaleString("es-CL")}</td>
+      <td>${esc(c.pago) || "Pendiente"}</td><td>${fmtFecha(c.fecha_solicitud)}</td>
       <td class="acciones-cell">
         <button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver</button>
         <button class="btn btn-secondary btn-sm" data-pago50="${c.id}">Marcar Pagado 50%</button>
@@ -919,7 +959,7 @@ function renderDashboardAdmin() {
 
   document.getElementById("tablaAdminProceso").innerHTML = proceso.map(c => `
     <tr>
-      <td>${c.empresa}</td><td>${c.producto}</td><td>${fmtFecha(c.fecha_solicitud)}</td><td>${c.fecha_requerida || "-"}</td>
+      <td>${esc(c.empresa)}</td><td>${esc(c.producto)}</td><td>${fmtFecha(c.fecha_solicitud)}</td><td>${esc(c.fecha_requerida) || "-"}</td>
       <td class="acciones-cell">
         <button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver</button>
         <button class="btn btn-primary btn-sm" data-completar="${c.id}">Marcar Completado</button>
@@ -929,7 +969,7 @@ function renderDashboardAdmin() {
 
   document.getElementById("tablaAdminCompletadas").innerHTML = completadas.map(c => `
     <tr>
-      <td>${c.empresa}</td><td>${c.producto}</td><td>$${Number(c.presupuesto || 0).toLocaleString("es-CL")}</td>
+      <td>${esc(c.empresa)}</td><td>${esc(c.producto)}</td><td>$${Number(c.presupuesto || 0).toLocaleString("es-CL")}</td>
       <td>${fmtFecha(c.fecha_solicitud)}</td>
       <td class="acciones-cell"><button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver</button></td>
     </tr>
@@ -937,7 +977,7 @@ function renderDashboardAdmin() {
 
   document.getElementById("tablaAdminTodas").innerHTML = cotizaciones.map(c => `
     <tr>
-      <td>${c.empresa}</td><td>${c.producto}</td><td>${estadoTagHTML(c.estado)}</td><td>${fmtFecha(c.fecha_solicitud)}</td>
+      <td>${esc(c.empresa)}</td><td>${esc(c.producto)}</td><td>${estadoTagHTML(c.estado)}</td><td>${fmtFecha(c.fecha_solicitud)}</td>
       <td class="acciones-cell"><button class="btn btn-outline btn-sm" data-ver="${c.id}">Ver</button></td>
     </tr>
   `).join("") || `<tr><td colspan="5">No hay cotizaciones registradas.</td></tr>`;
@@ -995,7 +1035,7 @@ function initFormEnviarPresupuesto() {
       presupuesto_descripcion: descripcion.value
     });
     if (notificar && actualizada) {
-      await enviarFormspree(actualizada, `Presupuesto enviado a ${actualizada.empresa}`);
+      await enviarFormulario(actualizada, `Presupuesto enviado a ${actualizada.empresa}`);
     }
     abrirWhatsApp(`Presupuesto enviado a ${actualizada.empresa} - Producto: ${actualizada.producto} - Monto: $${Number(actualizada.presupuesto).toLocaleString("es-CL")}`);
     cerrarModales();
