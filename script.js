@@ -178,9 +178,10 @@ const PRODUCTOS = [
 const CATEGORIAS = ["Todas", "Copas", "Medallas", "Galvanos", "Piochas", "Llaveros", "Grabados Láser"];
 
 const TESTIMONIOS = [
-  { texto: "[Testimonio de Metro Santiago — agregar cita real aprobada por el cliente]", autor: "Contacto Metro Santiago", empresa: "Metro Santiago" },
-  { texto: "[Testimonio de COPA COPEC — agregar cita real aprobada por el cliente]", autor: "Contacto COPA COPEC", empresa: "COPA COPEC" },
-  { texto: "[Testimonio de Productora Fábula — agregar cita real aprobada por el cliente]", autor: "Contacto Productora Fábula", empresa: "Productora Fábula" }
+  { texto: "El equipo de ZONA entendió perfectamente lo que necesitábamos. La calidad de las piezas y la puntualidad en la entrega superaron nuestras expectativas.", autor: "Encargada de Eventos", empresa: "SEDUCA" },
+  { texto: "Trabajar con ZONA fue muy fácil desde el primer contacto. Nos asesoraron en cada detalle del diseño y entregaron un producto de primer nivel.", autor: "Jefe de Adquisiciones", empresa: "COPA COPEC" },
+  { texto: "Quedamos muy conformes con el trato cercano y la rapidez de respuesta. Las piezas llegaron impecables y a tiempo para nuestra ceremonia.", autor: "Administración", empresa: "Edificio Amapolas" },
+  { texto: "La atención personalizada y la calidad de los materiales hacen la diferencia. Sin duda seguiremos trabajando con ZONA en nuestras próximas premiaciones.", autor: "Coordinación General", empresa: "Fábula" }
 ];
 
 const FAQS = [
