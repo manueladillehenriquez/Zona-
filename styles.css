@@ -554,8 +554,10 @@ img { max-width: 100%; display: block; }
 .prensa-caption {
   font-family: var(--font-primary);
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: var(--color-primary);
+  text-align: center;
+  margin-top: var(--space-xl);
   margin-bottom: var(--space-sm);
 }
 .video-wrapper {
