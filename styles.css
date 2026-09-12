@@ -334,7 +334,7 @@ img { max-width: 100%; display: block; }
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 26s linear infinite;
+  animation: marquee-scroll 42s linear infinite;
   will-change: transform;
 }
 .marquee-strip:hover .marquee-track { animation-play-state: paused; }
