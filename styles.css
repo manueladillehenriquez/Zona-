@@ -445,7 +445,7 @@ img { max-width: 100%; display: block; }
 }
 .trofeo-mini-2 { transform: translateY(-8%) scale(1.08); z-index: 2; }
 
-.slide-visual-alianzas { flex-direction: column; gap: clamp(0.5rem, 2vw, 1rem); padding: clamp(0.8rem, 3vw, 1.5rem); }
+.slide-visual-alianzas { flex-direction: column; gap: clamp(0.5rem, 2vw, 1rem); padding: clamp(0.8rem, 3vw, 1.5rem) clamp(2.6rem, 6vw, 3.4rem); }
 .slide-visual-label {
   font-family: var(--font-primary);
   font-weight: 600;
@@ -456,10 +456,26 @@ img { max-width: 100%; display: block; }
 }
 .alianzas-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.4rem, 1.5vw, 0.9rem);
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.3rem, 1vw, 0.7rem);
   width: 100%;
-  max-width: 320px;
+  max-width: 520px;
+}
+.alianza-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.2rem;
+  min-height: clamp(32px, 7vw, 60px);
+  padding: 0.35rem 0.25rem;
+  background: var(--color-white);
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.alianza-tile svg { width: clamp(13px, 2vw, 20px); height: clamp(13px, 2vw, 20px); flex: none; }
+.alianza-tile span {
+  font-family: var(--font-primary); font-weight: 600;
+  font-size: clamp(0.36rem, 0.8vw, 0.52rem); line-height: 1.1;
+  color: var(--color-text);
 }
 .alianzas-grid img {
   width: 100%;
@@ -657,7 +673,7 @@ img { max-width: 100%; display: block; }
 }
 .producto-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
 .producto-img-wrap { position: relative; overflow: hidden; aspect-ratio: 4/3; background: #eee; }
-.producto-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease); }
+.producto-img-wrap img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s var(--ease); }
 .producto-card:hover .producto-img-wrap img { transform: scale(1.06); }
 .producto-overlay {
   position: absolute; inset: 0;
@@ -1093,7 +1109,8 @@ input.invalid, select.invalid, textarea.invalid { border-color: var(--color-erro
 }
 .modal-close:hover { border-color: var(--color-primary); color: var(--color-primary); }
 .modal-producto-body { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); }
-.modal-producto-body img { border-radius: var(--radius); width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+.modal-img-wrap { position: relative; border-radius: var(--radius); overflow: hidden; background: #eee; align-self: start; }
+.modal-producto-body img { border-radius: var(--radius); width: 100%; aspect-ratio: 1/1; object-fit: contain; display: block; }
 .specs-list { list-style: none; padding: 0; margin: var(--space-sm) 0; font-size: 0.9rem; color: var(--color-text-light); }
 .specs-list li { padding: 0.4rem 0; border-bottom: 1px solid var(--color-border); }
 .modal-confirmacion-body { text-align: center; }
@@ -1169,4 +1186,19 @@ input.invalid, select.invalid, textarea.invalid { border-color: var(--color-erro
   width: 1px !important;
   height: 1px !important;
   overflow: hidden !important;
+}
+
+/* ================= WATERMARK EN IMÁGENES ================= */
+/* Texto diagonal "zonatrofeos.cl" superpuesto a cada imagen de producto
+   (tarjetas del catálogo/destacados y modal de detalle). Es un SVG de fondo
+   que escala con el contenedor; el contorno lo mantiene legible sobre
+   fondos claros y oscuros. */
+.producto-img-wrap::after,
+.modal-img-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ctext x='200' y='150' transform='rotate(-32 200 150)' text-anchor='middle' dominant-baseline='central' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='40' letter-spacing='2' fill='%23ffffff' fill-opacity='0.6' stroke='%23000000' stroke-opacity='0.35' stroke-width='1'%3Ezonatrofeos.cl%3C/text%3E%3C/svg%3E") center / contain no-repeat;
 }
