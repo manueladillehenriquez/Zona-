@@ -590,7 +590,7 @@ function productoCardHTML(p) {
   const whatsappHref = generarLinkWhatsApp(`Hola ZONA, quiero cotizar: ${p.nombre}`);
   return `
     <div class="producto-card" data-id="${p.id}">
-      <div class="producto-img-wrap">
+      <div class="producto-img-wrap" style="--img-bg: url('${p.imagen}')">
         <img src="${p.imagen}" alt="${p.nombre}" loading="lazy">
         <div class="producto-overlay">Ver Detalles</div>
       </div>

@@ -672,8 +672,17 @@ img { max-width: 100%; display: block; }
   flex-direction: column;
 }
 .producto-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
-.producto-img-wrap { position: relative; overflow: hidden; aspect-ratio: 4/3; background: #eee; }
-.producto-img-wrap img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s var(--ease); }
+/* Fondo burdeo (color de las fotos) + copia desenfocada de la misma imagen,
+   para que las franjas laterales/superiores no se vean blancas ni grises. */
+.producto-img-wrap { position: relative; overflow: hidden; aspect-ratio: 4/3; background: #5a0a22; }
+.producto-img-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: var(--img-bg) center / cover no-repeat;
+  filter: blur(22px);
+}
+.producto-img-wrap img { position: relative; width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s var(--ease); }
 .producto-card:hover .producto-img-wrap img { transform: scale(1.06); }
 .producto-overlay {
   position: absolute; inset: 0;

@@ -209,20 +209,48 @@
           <div class="carousel-slide carousel-slide-active">
             <div class="slide-panel">
               <div class="slide-visual slide-visual-despacho">
-                <svg viewBox="0 0 400 260" class="van-illustration" role="img" aria-label="Furgón de despacho ZONA con pin de ubicación">
-                  <path d="M40 205 C120 195, 280 195, 360 205" stroke="rgba(233,207,122,0.35)" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round" fill="none"/>
-                  <rect x="55" y="120" width="180" height="75" rx="8" fill="#F1EBE7"/>
-                  <rect x="225" y="140" width="75" height="55" rx="6" fill="#F1EBE7"/>
-                  <rect x="238" y="150" width="34" height="24" rx="3" fill="#7D2865"/>
-                  <rect x="70" y="140" width="120" height="36" rx="4" fill="#D4AF37" opacity="0.9"/>
-                  <text x="130" y="164" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="700" font-size="16" fill="#501a41">ZONA</text>
-                  <circle cx="100" cy="200" r="18" fill="#241E22"/>
-                  <circle cx="100" cy="200" r="7" fill="#F1EBE7"/>
-                  <circle cx="255" cy="200" r="18" fill="#241E22"/>
-                  <circle cx="255" cy="200" r="7" fill="#F1EBE7"/>
-                  <circle cx="330" cy="70" r="26" fill="#D4AF37"/>
-                  <polygon points="330,120 312,80 348,80" fill="#D4AF37"/>
-                  <circle cx="330" cy="70" r="10" fill="#501a41"/>
+                <svg viewBox="0 0 400 260" class="van-illustration" role="img" aria-label="Camión de despacho ZONA con ruta y pin de ubicación">
+                  <defs>
+                    <linearGradient id="zdBox" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="#FFFFFF"/>
+                      <stop offset="1" stop-color="#E4DAEA"/>
+                    </linearGradient>
+                    <linearGradient id="zdGold" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="#F0D878"/>
+                      <stop offset="1" stop-color="#C79A25"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Mapa con ruta -->
+                  <rect x="222" y="12" width="166" height="100" rx="16" fill="#FFFFFF" fill-opacity="0.10" stroke="#FFFFFF" stroke-opacity="0.28"/>
+                  <path d="M222 62 H388 M300 12 V112 M222 92 L388 34 M350 12 V112" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M238 100 C268 100 268 66 298 66 S336 60 352 42" stroke="#F0D878" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 9" fill="none"/>
+                  <circle cx="238" cy="100" r="5" fill="#FFFFFF"/>
+                  <!-- Pin -->
+                  <ellipse cx="352" cy="58" rx="13" ry="4.5" fill="#000000" fill-opacity="0.22"/>
+                  <path d="M352 56 C340 42 338 38 338 32 a14 14 0 0 1 28 0 C366 38 364 42 352 56 Z" fill="url(#zdGold)"/>
+                  <circle cx="352" cy="32" r="5.5" fill="#501a41"/>
+                  <!-- Líneas de velocidad -->
+                  <path d="M6 140 H26 M0 162 H20 M10 184 H30" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round"/>
+                  <!-- Sombra y suelo -->
+                  <ellipse cx="170" cy="226" rx="150" ry="7" fill="#000000" fill-opacity="0.25"/>
+                  <!-- Carrocería -->
+                  <rect x="34" y="112" width="186" height="90" rx="12" fill="url(#zdBox)"/>
+                  <rect x="52" y="136" width="150" height="40" rx="9" fill="url(#zdGold)"/>
+                  <text x="127" y="163" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="700" font-size="20" letter-spacing="3" fill="#501a41">ZONA</text>
+                  <!-- Cabina -->
+                  <path d="M214 142 H262 Q276 142 285 156 L302 178 Q306 184 306 192 V202 H214 Z" fill="#F1EBE7"/>
+                  <path d="M226 152 H258 Q266 152 271 160 L282 176 H226 Z" fill="#5B3A78"/>
+                  <path d="M232 152 L246 152 L236 176 L226 176 V160 Z" fill="#FFFFFF" fill-opacity="0.22"/>
+                  <rect x="294" y="186" width="12" height="7" rx="3" fill="#F0D878"/>
+                  <!-- Chasis -->
+                  <rect x="34" y="196" width="272" height="12" rx="4" fill="#2A1F2B"/>
+                  <!-- Ruedas -->
+                  <circle cx="92" cy="208" r="19" fill="#1C1520"/>
+                  <circle cx="92" cy="208" r="9" fill="#F1EBE7"/>
+                  <circle cx="92" cy="208" r="3.5" fill="#C79A25"/>
+                  <circle cx="262" cy="208" r="19" fill="#1C1520"/>
+                  <circle cx="262" cy="208" r="9" fill="#F1EBE7"/>
+                  <circle cx="262" cy="208" r="3.5" fill="#C79A25"/>
                 </svg>
               </div>
               <div class="slide-text">
