@@ -233,16 +233,16 @@ const PRODUCTOS = [
   { id: 71, nombre: "Galvano Terciopelo con Logo y Placa Metalex", categoria: "Galvanos", imagen: "images/productos/producto-71.jpg",
     descripcion: "Galvano enmarcado en madera con fondo de terciopelo, logo institucional a color y placa Metalex grabada.",
     especificaciones: { Material: "Madera / terciopelo / Metalex", Personalización: "Logo a color + placa grabada" } },
-  { id: 72, nombre: "Retablo 14x19 con Reloj", categoria: "Maderas", imagen: "images/productos/producto-72.jpg",
+  { id: 72, nombre: "Retablo 14x19 con Reloj", categoria: "Galvanos", imagen: "images/productos/producto-72.jpg",
     descripcion: "Retablo de madera de 14 x 19 cm con reloj incorporado, logo y mensaje grabados con láser.",
     especificaciones: { Material: "Madera", Medidas: "14 x 19 cm", Detalle: "Reloj incorporado", Personalización: "Grabado láser de logo y texto" } },
-  { id: 73, nombre: "Retablo Placa y Logo en Metalex", categoria: "Maderas", imagen: "images/productos/producto-73.jpg",
+  { id: 73, nombre: "Retablo Placa y Logo en Metalex", categoria: "Galvanos", imagen: "images/productos/producto-73.jpg",
     descripcion: "Retablo de madera con placa de logos y placa de texto en Metalex grabado, ideal para felicitaciones institucionales.",
     especificaciones: { Material: "Madera / Metalex", Personalización: "Placas Metalex grabadas" } },
-  { id: 74, nombre: "Retablo Placas Metalex Grabadas con Láser", categoria: "Maderas", imagen: "images/productos/producto-74.jpg",
+  { id: 74, nombre: "Retablo Placas Metalex Grabadas con Láser", categoria: "Galvanos", imagen: "images/productos/producto-74.jpg",
     descripcion: "Retablo de madera con medallón de logo y placa de texto en Metalex grabados con láser.",
     especificaciones: { Material: "Madera / Metalex", Personalización: "Grabado láser de logo y texto" } },
-  { id: 75, nombre: "Retablo Reloj Módulo", categoria: "Maderas", imagen: "images/productos/producto-75.jpg",
+  { id: 75, nombre: "Retablo Reloj Módulo", categoria: "Galvanos", imagen: "images/productos/producto-75.jpg",
     descripcion: "Retablo de madera con reloj de pared grabado con láser, con logo y mensaje personalizados.",
     especificaciones: { Material: "Madera", Detalle: "Reloj funcional", Personalización: "Grabado láser de logo y texto" } },
   { id: 76, nombre: "Caja de Madera Portalápiz", categoria: "Maderas", imagen: "images/productos/producto-76.jpg",
@@ -250,7 +250,16 @@ const PRODUCTOS = [
     especificaciones: { Material: "Madera", Uso: "Estuche para lápiz o bolígrafo", Personalización: "Grabado láser de logo o texto" } },
   { id: 77, nombre: "Caja de Madera Porta Tarjetas", categoria: "Maderas", imagen: "images/productos/producto-77.jpg",
     descripcion: "Caja de madera con tapa y bisagras para tarjetas de presentación, de uso corporativo y de escritorio.",
-    especificaciones: { Material: "Madera", Uso: "Porta tarjetas de presentación", Personalización: "Grabado láser de logo o texto" } }
+    especificaciones: { Material: "Madera", Uso: "Porta tarjetas de presentación", Personalización: "Grabado láser de logo o texto" } },
+  { id: 78, nombre: "Caja de Madera para Medallón", categoria: "Maderas", imagen: "images/productos/producto-78.jpg",
+    descripcion: "Estuche de madera cuadrado con cierre metálico y interior de terciopelo verde, para presentar medallones y medallas de reconocimiento.",
+    especificaciones: { Material: "Madera / terciopelo", Uso: "Estuche para medallón o medalla", Personalización: "Grabado láser de logo o texto" } },
+  { id: 79, nombre: "Caja de Madera para Copa Individual", categoria: "Maderas", imagen: "images/productos/producto-79.jpg",
+    descripcion: "Caja de madera con bisagras y cierre dorado para presentar una copa de cristal, ideal para regalos corporativos y brindis de reconocimiento.",
+    especificaciones: { Material: "Madera", Uso: "Estuche para copa individual", Personalización: "Grabado láser de logo o texto" } },
+  { id: 80, nombre: "Piocha Base Importada (Alt.)", categoria: "Piochas", imagen: "images/productos/producto-80.jpg",
+    descripcion: "Piocha circular con base importada y logo institucional a color bajo resina, terminación premium.",
+    especificaciones: { Material: "Metal", Personalización: "Logo a color + resina" } }
 ];
 
 const CATEGORIAS = ["Todas", "Copas", "Medallas", "Galvanos", "Cristales", "Maderas", "Piochas", "Llaveros", "Trofeos"];
