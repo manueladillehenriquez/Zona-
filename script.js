@@ -6,11 +6,11 @@
 /* ================= CONFIGURACIÓN ================= */
 const CONFIG = {
   whatsappNumero: "56226716459",
-  adminEmail: "zonatrofeos@hotmail.cl",
+  adminEmail: "zonadetrofeos@gmail.com",
   // Correo al que llegan los formularios vía FormSubmit.co (sin necesidad de cuenta).
   // La primera vez que llegue un mensaje real, FormSubmit enviará un correo de
   // confirmación a esta casilla (revisar bandeja de entrada y spam) para activarlo.
-  formsubmitEmail: "zonatrofeos@hotmail.cl"
+  formsubmitEmail: "zonadetrofeos@gmail.com"
 };
 
 /* ================= DATOS INICIALES ================= */
